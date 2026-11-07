@@ -1,0 +1,9 @@
+customer
+orders
+lineitem
+1	BUILDING
+2	AUTOMOBILE
+3	AUTOMOBILE
+4	MACHINERY
+5	HOUSEHOLD
+bronze.q3_sf10.customer	1500000

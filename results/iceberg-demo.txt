@@ -1,0 +1,7 @@
+silver.q3_sf10.shipping_lines: 302114 rows, 0 non-null shipping_note values.
+Data file paths unchanged: 1 before, 1 after.
+
+silver.demo.q3_sf10_snapshot: snapshot 8892859569719058125
+After DELETE: 0
+FOR VERSION AS OF: 5
+After rollback: 5

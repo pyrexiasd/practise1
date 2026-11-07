@@ -1,0 +1,5 @@
+NAMES                        IMAGE                                     STATUS                    PORTS
+oti-practice1-lakekeeper-1   quay.io/lakekeeper/catalog:v0.11.6        Up 4 seconds (healthy)    127.0.0.1:18181->8181/tcp
+oti-practice1-postgres-1     postgres:17                               Up 27 minutes (healthy)   5432/tcp
+oti-practice1-silo-1         pgsty/silo:RELEASE.2026-10-26T00-00-00Z   Up 27 minutes             127.0.0.1:19001->9001/tcp
+oti-practice1-trino-1        trinodb/trino:476                         Up 27 minutes (healthy)   127.0.0.1:18080->8080/tcp

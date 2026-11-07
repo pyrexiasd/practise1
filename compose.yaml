@@ -1,0 +1,66 @@
+name: oti-practice1
+
+services:
+  silo:
+    image: pgsty/silo:RELEASE.2026-10-26T00-00-00Z
+    command: [server, /data, --console-address, ':9001']
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - '127.0.0.1:19001:9001'
+    volumes:
+      - objects:/data
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - catalog-db:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD, pg_isready, -h, '127.0.0.1', -U, postgres]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  lakekeeper:
+    image: quay.io/lakekeeper/catalog:v0.11.6
+    command: [serve]
+    environment:
+      LAKEKEEPER__PG_ENCRYPTION_KEY: This-is-NOT-Secure!
+      LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://postgres:postgres@postgres:5432/postgres
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://postgres:postgres@postgres:5432/postgres
+      LAKEKEEPER__AUTHZ_BACKEND: allowall
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:18181:8181'
+    healthcheck:
+      test: [CMD, /home/nonroot/lakekeeper, healthcheck]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  trino:
+    image: trinodb/trino:476
+    ports:
+      - '127.0.0.1:18080:8080'
+    volumes:
+      - ./catalog:/etc/trino/catalog:ro
+
+  spark:
+    image: apache/spark:3.5.3
+    profiles: [tools]
+    environment:
+      AWS_REGION: us-east-1
+    volumes:
+      - ./spark/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
+      - ./spark/jars:/opt/spark/iceberg-jars:ro
+      - ./spark/bronze.sql:/opt/spark/bronze.sql:ro
+    command: [/opt/spark/bin/spark-sql, --master, 'local[2]', -f, /opt/spark/bronze.sql]
+
+volumes:
+  objects:
+  catalog-db:

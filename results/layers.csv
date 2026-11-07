@@ -1,0 +1,6 @@
+table,rows,files,bytes,MiB
+bronze.q3_sf10.customer,1500000,1,2073725,1.9777
+bronze.q3_sf10.orders,15000000,4,85735431,81.7637
+bronze.q3_sf10.lineitem,59986052,15,411565878,392.4998
+silver.q3_sf10.shipping_lines,302114,1,2895920,2.7618
+gold.q3_sf10.shipping_priority,10,1,849,0.0008
